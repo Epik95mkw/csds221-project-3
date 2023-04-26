@@ -1,8 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 const recordModel = new Schema({
-    holder: String,
-    time: String
+    setby: String,
+    time: String,
+    date: String
 })
 
 const gameModel = new Schema({
