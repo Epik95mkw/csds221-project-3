@@ -23,13 +23,11 @@ export default function RecordList() {
         
     const records = data?.map((r, i) =>
       <tr key={i}><td><Row className="my-3">
-        <Col >
-          <Link to={`/game/${r._id}`} style={{ textDecoration: 'none' }} className="d-grid">
+        <Col className="d-grid">
             <Button variant="light" size="sm">{r.setby}</Button>
-          </Link>
         </Col>
-        <Col>{r.time}</Col>
-        <Col>{r.date}</Col>
+        <Col className="text-center">{r.time}</Col>
+        <Col className="text-center">{r.date}</Col>
         <Col className="d-flex justify-content-end">
           <Button 
             variant="secondary" 

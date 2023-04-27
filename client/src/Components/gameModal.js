@@ -24,6 +24,7 @@ export default function GameModal(props) {
             .then(res => onClose())
             .then(() => onSubmit());
         }
+        setForm({ name: "" });
     }
 
     const updateGame = () => {
@@ -36,6 +37,7 @@ export default function GameModal(props) {
             .then(res => onClose())
             .then(() => onSubmit());
         }
+        setForm({ name: "" });
     }
 
     return (
