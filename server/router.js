@@ -5,7 +5,8 @@ import Game from './models.js';
 
 const router = Router();
 dotenv.config({path : './.env'});
-const connectMongo = async () => mongoose.connect(process.env.DBSTRING);
+console.log(process.env.DBSTRING)
+const connectMongo = async () => await mongoose.connect(process.env.DBSTRING);
 
 const err = (res, msg) => res.status(400).json({ error: msg });
 
