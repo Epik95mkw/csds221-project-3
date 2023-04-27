@@ -100,6 +100,7 @@ async function updateRecord(req, res) {
     await game.save();
     res.status(200).json(game);
 }
+router.put('/game/:gid/record/:rid', updateRecord);
 
 
 async function deleteRecord(req, res) {
@@ -109,6 +110,8 @@ async function deleteRecord(req, res) {
     await connectMongo();
 	const game = await Game.findById(req.params.gid);
     game.records.id(req.params.rid).deleteOne();
+
+    await game.save();
     res.status(200).json(game);
 }
 router.delete('/game/:gid/record/:rid', deleteRecord);
