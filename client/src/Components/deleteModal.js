@@ -6,12 +6,22 @@ import { Button, Modal } from "react-bootstrap";
 
 
 export default function DeleteModal(props) {
-    const id = props.id;
+    const recordMode = props.mode === 'record';
     const onSubmit = props.onSubmit;
     const onClose = props.onClose;
+    const show = recordMode ? props.rid : props.gid;
 
     const deleteGame = () => {
-        fetch(`/api/game/${props.id}`, {
+        fetch(`/api/game/${props.gid}`, {
+            method: 'DELETE',
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(res => onClose())
+        .then(() => onSubmit());
+    }
+
+    const deleteRecord = () => {
+        fetch(`/api/game/${props.gid}/record/${props.rid}`, {
             method: 'DELETE',
             headers: { "Content-Type": "application/json" }
         })
@@ -20,7 +30,7 @@ export default function DeleteModal(props) {
     }
 
     return (
-        <Modal centered show={id} onHide={onClose}>
+        <Modal centered show={show} onHide={onClose}>
           <Modal.Header closeButton>
             <Modal.Title>Are you sure?</Modal.Title>
           </Modal.Header>
@@ -28,7 +38,7 @@ export default function DeleteModal(props) {
             <Button variant="secondary" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={deleteGame}>
+            <Button variant="danger" onClick={recordMode ? deleteRecord : deleteGame}>
               Delete
             </Button>
           </Modal.Footer>

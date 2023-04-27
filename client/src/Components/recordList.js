@@ -3,13 +3,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import '../style.css';
 import useSWR from 'swr';
 import { Container, Table, Row, Col, Button } from "react-bootstrap";
-import { Link } from 'react-router-dom';
-import GameModal from './gameModal.js';
+import { Link, useParams } from 'react-router-dom';
+import RecordModal from './recordModal.js';
 import DeleteModal from './deleteModal.js';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function GameList() {
+export default function RecordList() {
+    const { gameId } = useParams();
+
     const [showAdd, setShowAdd] = useState(false);
     const handleCloseAdd = () => setShowAdd(false);
     const handleShowAdd = () => setShowAdd(true);
@@ -17,26 +19,27 @@ export default function GameList() {
     const [updateId, setUpdateId] = useState("");
     const [deleteId, setDeleteId] = useState("");
     
-    const { data, mutate } = useSWR('/api/games', fetcher);
+    const { data, mutate } = useSWR(`/api/game/${gameId}/records`, fetcher);
         
-    const games = data?.map((g, i) =>
+    const records = data?.map((r, i) =>
       <tr key={i}><td><Row className="my-3">
         <Col >
-          <Link to={`/game/${g._id}`} style={{ textDecoration: 'none' }} className="d-grid">
-            <Button variant="light" size="sm">{g.name}</Button>
+          <Link to={`/game/${r._id}`} style={{ textDecoration: 'none' }} className="d-grid">
+            <Button variant="light" size="sm">{r.setby}</Button>
           </Link>
         </Col>
-        <Col className="text-muted">Records: {g.records.length}</Col>
+        <Col>{r.time}</Col>
+        <Col>{r.date}</Col>
         <Col className="d-flex justify-content-end">
           <Button 
             variant="secondary" 
             size="sm" 
             className="mx-2"
-            onClick={() => setUpdateId(g._id)}
+            onClick={() => setUpdateId(r._id)}
           >
             Update
           </Button>
-          <Button variant="danger" size="sm" onClick={() => setDeleteId(g._id)}>
+          <Button variant="danger" size="sm" onClick={() => setDeleteId(r._id)}>
             Delete
           </Button>
         </Col>
@@ -45,21 +48,24 @@ export default function GameList() {
 
     return (
       <Container>
-        <GameModal
+        <RecordModal
+          gameId={gameId}
           mode="add"
           show={showAdd}
           onSubmit={mutate}
           onClose={handleCloseAdd}
         />
-        <GameModal
+        <RecordModal
+          gameId={gameId}
           mode="edit"
           id={updateId}
           onSubmit={mutate}
           onClose={() => setUpdateId("")}
         />
         <DeleteModal
-          mode="game"
-          gid={deleteId}
+          mode="record"
+          gid={gameId}
+          rid={deleteId}
           onSubmit={mutate}
           onClose={() => setDeleteId("")}
         />
@@ -69,15 +75,15 @@ export default function GameList() {
             <thead>
               <tr>
                 <td className="d-flex justify-content-between">
-                  <div className="fs-1">Games</div>
+                  <div className="fs-1">Records</div>
                   <Button variant="light" size="sm" onClick={handleShowAdd}>
-                    Add Game
+                    Add Record
                   </Button>
                 </td>
               </tr>
             </thead>
             <tbody>
-              {games}
+              {records}
             </tbody>
           </Table>
         </Row>

@@ -83,7 +83,22 @@ router.post('/game/:gid/record', addRecord);
 
 
 async function updateRecord(req, res) {
+    if (!req.params.gid)              { err(res, 'Missing game id');      return; }
+    if (!req.params.rid)              { err(res, 'Missing record id');    return; }
+    if (!req.body || !req.body.setby) { err(res, 'Missing record owner'); return; }
+    if (!req.body.time)               { err(res, 'Missing record time');  return; }
+    if (!req.body.date)               { err(res, 'Missing record date');  return; }
+
+    await connectMongo();
+    const game = await Game.findById(req.params.gid);
+    const record = game.records.id(req.params.rid);
+
+    record.setby = req.body.setby;
+    record.time = req.body.time;
+    record.date = req.body.date;
     
+    await game.save();
+    res.status(200).json(game);
 }
 
 
@@ -104,7 +119,7 @@ async function getRecords(req, res) {
 
     await connectMongo();
 	const game = await Game.findById(req.params.gid);
-    res.status(200).json(game.records);
+    res.status(200).json(game?.records);
 }
 router.get('/game/:gid/records', getRecords);
 
