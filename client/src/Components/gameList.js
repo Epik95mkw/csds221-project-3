@@ -4,6 +4,7 @@ import '../style.css';
 import useSWR from 'swr';
 import { Container, Table, Row, Col, Button } from "react-bootstrap";
 import GameModal from './gameModal.js';
+import DeleteModal from './deleteModal.js';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -13,6 +14,7 @@ export default function GameList() {
     const handleShowAdd = () => setShowAdd(true);
 
     const [updateId, setUpdateId] = useState("");
+    const [deleteId, setDeleteId] = useState("");
     
     const { data, mutate } = useSWR('/api/games', fetcher);
         
@@ -27,10 +29,11 @@ export default function GameList() {
             variant="secondary" 
             size="sm" 
             className="mx-2"
-            onClick={() => setUpdateId(g._id)}>
+            onClick={() => setUpdateId(g._id)}
+          >
             Update
           </Button>
-          <Button variant="danger" size="sm">
+          <Button variant="danger" size="sm" onClick={() => setDeleteId(g._id)}>
             Delete
           </Button>
         </Col>
@@ -51,6 +54,12 @@ export default function GameList() {
           onSubmit={mutate}
           onClose={() => setUpdateId("")}
         />
+        <DeleteModal
+          id={deleteId}
+          onSubmit={mutate}
+          onClose={() => setDeleteId("")}
+        />
+        
         <Row>
           <Table className="mt-5">
             <thead>
