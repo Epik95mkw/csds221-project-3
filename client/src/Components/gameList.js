@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import '../style.css';
 import useSWR from 'swr';
 import { Container, Table, Row, Col, Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 import GameModal from './gameModal.js';
 import DeleteModal from './deleteModal.js';
 
@@ -20,8 +21,10 @@ export default function GameList() {
         
     const games = data?.map((g, i) =>
       <tr key={i}><td><Row className="my-3">
-        <Col className="d-grid">
-          <Button variant="light" size="sm">{g.name}</Button>
+        <Col >
+          <Link to={`/game/${g._id}`} style={{ textDecoration: 'none' }} className="d-grid">
+            <Button variant="light" size="sm">{g.name}</Button>
+          </Link>
         </Col>
         <Col className="text-muted">Records: {g.records.length}</Col>
         <Col className="d-flex justify-content-end">
@@ -59,7 +62,7 @@ export default function GameList() {
           onSubmit={mutate}
           onClose={() => setDeleteId("")}
         />
-        
+
         <Row>
           <Table className="mt-5">
             <thead>
