@@ -27,7 +27,7 @@ export default function GameModal(props) {
     }
 
     return (
-      <Modal show={show} onHide={onClose}>
+      <Modal centered show={show} onHide={onClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Game</Modal.Title>
         </Modal.Header>

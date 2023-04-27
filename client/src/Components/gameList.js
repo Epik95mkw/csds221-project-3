@@ -16,9 +16,18 @@ export default function GameList() {
         
     const games = data?.map((g, i) =>
       <tr key={i}><td><Row className="my-3">
-        <Col>{g.name}</Col>
+        <Col className="d-grid">
+          <Button variant="light" size="sm">{g.name}</Button>
+        </Col>
         <Col className="text-muted">Records: {g.records.length}</Col>
-        <Col className="d-flex justify-content-end">buttons</Col>
+        <Col className="d-flex justify-content-end">
+          <Button variant="secondary" size="sm" className="mx-2">
+            Update
+          </Button>
+          <Button variant="danger" size="sm">
+            Delete
+          </Button>
+        </Col>
       </Row></td></tr>
     );
 

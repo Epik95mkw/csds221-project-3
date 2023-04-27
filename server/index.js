@@ -8,12 +8,7 @@ dotenv.config({path : '../.env'});
 const PORT = process.env.PORT;
 
 app.use(express.json());
-app.use(cors());
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
- 
+app.use(cors()); 
 app.use('/api', router);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
