@@ -8,9 +8,11 @@ import GameModal from './gameModal.js';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function GameList() {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [showAdd, setShowAdd] = useState(false);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleShowAdd = () => setShowAdd(true);
+
+    const [updateId, setUpdateId] = useState("");
     
     const { data, mutate } = useSWR('/api/games', fetcher);
         
@@ -21,7 +23,11 @@ export default function GameList() {
         </Col>
         <Col className="text-muted">Records: {g.records.length}</Col>
         <Col className="d-flex justify-content-end">
-          <Button variant="secondary" size="sm" className="mx-2">
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            className="mx-2"
+            onClick={() => setUpdateId(g._id)}>
             Update
           </Button>
           <Button variant="danger" size="sm">
@@ -33,21 +39,27 @@ export default function GameList() {
 
     return (
       <Container>
+        <GameModal
+          mode="add"
+          show={showAdd}
+          onSubmit={mutate}
+          onClose={handleCloseAdd}
+        />
+        <GameModal
+          mode="edit"
+          id={updateId}
+          onSubmit={mutate}
+          onClose={() => setUpdateId("")}
+        />
         <Row>
           <Table className="mt-5">
             <thead>
               <tr>
                 <td className="d-flex justify-content-between">
                   <div className="fs-1">Games</div>
-                  <Button variant="light" size="sm" onClick={handleShow}>
+                  <Button variant="light" size="sm" onClick={handleShowAdd}>
                     Add Game
                   </Button>
-                  <GameModal
-                    mode="add"
-                    show={show}
-                    onSubmit={mutate}
-                    onClose={handleClose}
-                  />
                 </td>
               </tr>
             </thead>

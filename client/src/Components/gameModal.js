@@ -6,15 +6,15 @@ import { Button, Modal, Form } from "react-bootstrap";
 
 
 export default function GameModal(props) {
-    const mode = props.mode;
-    const show = props.show;
+    const addMode = props.mode === 'add';
+    const show = addMode ? props.show : props.id;
     const onSubmit = props.onSubmit;
     const onClose = props.onClose;
 
     const [form, setForm] = useState({ name: "" });
     const handleNameChange = (ev) => setForm({ name: ev.target.value })
 
-    const sendRequest = () => {
+    const addGame = () => {
         if (form.name) {
             fetch('/api/game', {
                 method: 'POST',
@@ -26,10 +26,22 @@ export default function GameModal(props) {
         }
     }
 
+    const updateGame = () => {
+        if (form.name) {
+            fetch(`/api/game/${props.id}`, {
+                method: 'PUT',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form)
+            })
+            .then(res => onClose())
+            .then(() => onSubmit());
+        }
+    }
+
     return (
       <Modal centered show={show} onHide={onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Game</Modal.Title>
+          <Modal.Title>{addMode ? 'Add' : 'Edit'} Game</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -48,8 +60,8 @@ export default function GameModal(props) {
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={sendRequest}>
-            Add Game
+          <Button variant="primary" onClick={addMode ? addGame : updateGame}>
+            {addMode ? 'Add' : 'Edit'} Game
           </Button>
         </Modal.Footer>
       </Modal>
