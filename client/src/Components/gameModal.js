@@ -9,7 +9,7 @@ export default function GameModal(props) {
     const addMode = props.mode === 'add';
     const show = addMode ? props.show : props.id;
     const onSubmit = props.onSubmit;
-    const onClose = props.onClose;
+    const onClose = () => { props.onClose(); setForm({ name: "" }); }
 
     const [form, setForm] = useState({ name: "" });
     const handleNameChange = (ev) => setForm({ name: ev.target.value })
@@ -21,10 +21,9 @@ export default function GameModal(props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
             })
-            .then(res => onClose())
-            .then(() => onSubmit());
+            .then(res => onSubmit())
+            .then(() => onClose());
         }
-        setForm({ name: "" });
     }
 
     const updateGame = () => {
@@ -34,10 +33,9 @@ export default function GameModal(props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
             })
-            .then(res => onClose())
-            .then(() => onSubmit());
+            .then(res => onSubmit())
+            .then(() => onClose());
         }
-        setForm({ name: "" });
     }
 
     return (

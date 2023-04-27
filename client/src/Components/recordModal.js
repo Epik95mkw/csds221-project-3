@@ -10,7 +10,7 @@ export default function RecordModal(props) {
     const addMode = props.mode === 'add';
     const show = addMode ? props.show : props.id;
     const onSubmit = props.onSubmit;
-    const onClose = props.onClose;
+    const onClose = () => { props.onClose(); setForm(emptyForm); }
 
     const emptyForm = { setby: "", time: "", date: "" };
     const [form, setForm] = useState(emptyForm);
@@ -25,8 +25,9 @@ export default function RecordModal(props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
             })
-            .then(res => onClose())
-            .then(() => onSubmit());
+            .then(res => onSubmit())
+            .then(() => onClose());
+            
         }
     }
 
@@ -37,8 +38,8 @@ export default function RecordModal(props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
             })
-            .then(res => onClose())
-            .then(() => onSubmit());
+            .then(res => onSubmit())
+            .then(() => onClose());
         }
     }
 
@@ -61,7 +62,7 @@ export default function RecordModal(props) {
             <Form.Group className="mb-3">
               <Form.Label>Time</Form.Label>
               <Form.Control 
-                type="text" 
+                type="string" 
                 placeholder="Enter record time" 
                 value={form.time}
                 onChange={handleTimeChange}
@@ -70,7 +71,7 @@ export default function RecordModal(props) {
             <Form.Group className="mb-3">
               <Form.Label>Date Set</Form.Label>
               <Form.Control 
-                type="text" 
+                type="date" 
                 placeholder="Enter date set" 
                 value={form.date}
                 onChange={handleDateChange}
