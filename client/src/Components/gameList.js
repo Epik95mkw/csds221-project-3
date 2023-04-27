@@ -1,15 +1,13 @@
-import { React, useState, useReducer } from 'react';
+import { React, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.css";
 import '../style.css';
 import useSWR from 'swr';
-import { Container, Table, Row, Col, Button, Modal, Form } from "react-bootstrap";
+import { Container, Table, Row, Col, Button } from "react-bootstrap";
+import GameModal from './gameModal.js';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function GameList() {
-    const [form, setForm] = useState({ name: "" });
-    const handleNameChange = (ev) => setForm({ name: ev.target.value })
-
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,18 +22,6 @@ export default function GameList() {
       </Row></td></tr>
     );
 
-    const addGame = () => {
-        if (form.name) {
-            fetch('/api/game', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form)
-            })
-            .then(res => handleClose())
-            .then(() => mutate());
-        }
-    }
-
     return (
       <Container>
         <Row>
@@ -47,33 +33,12 @@ export default function GameList() {
                   <Button variant="light" size="sm" onClick={handleShow}>
                     Add Game
                   </Button>
-                  
-                  <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Add Game</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <Form>
-                        <Form.Group className="mb-3">
-                          <Form.Label>Title</Form.Label>
-                          <Form.Control 
-                            type="text" 
-                            placeholder="Enter game title" 
-                            value={form.name}
-                            onChange={handleNameChange}
-                          />
-                        </Form.Group>
-                      </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleClose}>
-                        Cancel
-                      </Button>
-                      <Button variant="primary" onClick={addGame}>
-                        Add Game
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
+                  <GameModal
+                    mode="add"
+                    show={show}
+                    onSubmit={mutate}
+                    onClose={handleClose}
+                  />
                 </td>
               </tr>
             </thead>
